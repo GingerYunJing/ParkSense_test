@@ -1,0 +1,23 @@
+# Python virtual environment
+.venv/
+
+# Compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Frontend code — not part of backend container
+parksense-frontend/
+node_modules/
+
+# Local environment variables (secret)
+.env
+
+# Git files
+.git/
+.gitignore
+
+# Unused
+ParkSense_Edge/
+README.md

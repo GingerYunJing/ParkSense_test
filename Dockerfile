@@ -18,4 +18,5 @@ COPY . .
 EXPOSE 8080
 
 # Run FastAPI app with Uvicorn and Cloud Run listen on port 8080
+RUN chmod +x run_parksense.sh
 CMD ["./run_parksense.sh"]

@@ -114,8 +114,7 @@ jobs:
             --platform=managed \
             --region=${{ env.REGION }} \
             --allow-unauthenticated \
-            --set-env-vars="MONGO_URI=${{ steps.secrets.outputs.MONGO_URI }},MONGO_DB=${{ steps.secrets.outputs.MONGO_DB }},SECRET_KEY=${{ steps.secrets.outputs.SECRET_KEY }}"
-
+            --update-secrets=MONGO_URI=MONGO_URI:latest,MONGO_DB=MONGO_DB:latest,SECRET_KEY=SECRET_KEY:latest
 
       
         # END - Docker auth and build

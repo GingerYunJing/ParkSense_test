@@ -32,7 +32,8 @@ name: 'Build and Deploy to Cloud Run'
 on:
   push:
     branches:
-      - '"main"'
+      - main
+  workflow_dispatch:
 
 env:
   PROJECT_ID: 'sigmaparksense' # TODO: update to your Google Cloud project ID

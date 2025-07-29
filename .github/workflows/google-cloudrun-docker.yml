@@ -107,17 +107,15 @@ jobs:
       #       --tag "${DOCKER_TAG}" .
       #     docker push "${DOCKER_TAG}"
 
-      - name: 'Build and Push Container via gcloud'
-        run: |-
+      - name: 'Deploy to Cloud Run via gcloud'
+        run: |
           gcloud run deploy ${{ env.SERVICE }} \
-            --source . \
+            --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/parksense-repo/${{ env.SERVICE }} \
+            --platform=managed \
             --region=${{ env.REGION }} \
-            --project=${{ env.PROJECT_ID }} \
             --allow-unauthenticated \
-            --set-build-env-vars \
-              MONGO_URI="${{ steps.secrets.outputs.MONGO_URI }}",\
-              MONGO_DB="${{ steps.secrets.outputs.MONGO_DB }}",\
-              SECRET_KEY="${{ steps.secrets.outputs.SECRET_KEY }}"
+            --set-env-vars="MONGO_URI=${{ steps.secrets.outputs.MONGO_URI }},MONGO_DB=${{ steps.secrets.outputs.MONGO_DB }},SECRET_KEY=${{ steps.secrets.outputs.SECRET_KEY }}"
+
 
       
         # END - Docker auth and build

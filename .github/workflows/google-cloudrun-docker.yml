@@ -56,16 +56,16 @@ jobs:
       #
       # See https://github.com/google-github-actions/auth for more options,
       # including authenticating via a JSON credentials file.
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
+      - name: 'Authenticate to Google Cloud'
+        id: 'auth'
         uses: 'google-github-actions/auth@f112390a2df9932162083945e46d439060d66ec2' # google-github-actions/auth@v2
         with:
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
           service_account: 'ginger-github-test@sigmaparksense.iam.gserviceaccount.com'
       
       # Load secrets from Google Secret Manager
-      - id: 'secrets'
-        name: 'Load secrets from Secret Manager'
+      - name: 'Load secrets from Secret Manager'
+        id: 'secrets'
         uses: 'google-github-actions/get-secretmanager-secrets@v1'
         with:
           secrets: |

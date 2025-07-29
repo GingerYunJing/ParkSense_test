@@ -62,6 +62,16 @@ jobs:
         with:
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
           service_account: 'ginger-github-test@sigmaparksense.iam.gserviceaccount.com'
+      
+      # Load secrets from Google Secret Manager
+      - id: 'secrets'
+        name: 'Load secrets from Secret Manager'
+        uses: 'google-github-actions/get-secretmanager-secrets@v1'
+        with:
+          secrets: |
+            MONGO_URI:projects/sigmaparksense/secrets/MONGO_URI
+            MONGO_DB:projects/sigmaparksense/secrets/MONGO_DB
+            SECRET_KEY:projects/sigmaparksense/secrets/SECRET_KEY
 
       # BEGIN - Docker auth and build
       #
@@ -76,12 +86,16 @@ jobs:
       - name: 'Build and Push Container'
         run: |-
           DOCKER_TAG="$${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
-          docker build --tag "${DOCKER_TAG}" .
+          docker build \
+            --build-arg MONGO_URI="${{ steps.secrets.outputs.MONGO_URI }}" \
+            --build-arg MONGO_DB="${{ steps.secrets.outputs.MONGO_DB }}" \
+            --build-arg SECRET_KEY="${{ steps.secrets.outputs.SECRET_KEY }}" \
+            --tag "${DOCKER_TAG}" .
           docker push "${DOCKER_TAG}"
-      - name: 'Deploy to Cloud Run'
-
+      
         # END - Docker auth and build
-
+        
+      - name: 'Deploy to Cloud Run'
         uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17' # google-github-actions/deploy-cloudrun@v2
         with:
           service: '${{ env.SERVICE }}'

@@ -63,6 +63,10 @@ jobs:
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
           service_account: 'ginger-github-test@sigmaparksense.iam.gserviceaccount.com'
       
+      # Verify the authentication was successful
+      - name: 'Verify Auth Identity'
+        run: gcloud auth list
+
       # Load secrets from Google Secret Manager
       - name: 'Load secrets from Secret Manager'
         id: 'secrets'
@@ -86,6 +90,7 @@ jobs:
       - name: 'Build and Push Container'
         run: |-
           DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
+          echo "Docker tag: ${DOCKER_TAG}"
           docker build \
             --build-arg MONGO_URI="${{ steps.secrets.outputs.MONGO_URI }}" \
             --build-arg MONGO_DB="${{ steps.secrets.outputs.MONGO_DB }}" \

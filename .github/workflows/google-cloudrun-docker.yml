@@ -64,8 +64,9 @@ jobs:
           service_account: 'ginger-github-test@sigmaparksense.iam.gserviceaccount.com'
       
       # Verify the authentication was successful
-      - name: 'Verify Auth Identity'
-        run: gcloud auth list
+      - name: Verify WIF Access
+        run: gcloud artifacts repositories list --location=${{ env.REGION }} --project=${{ env.PROJECT_ID }}
+
 
       # Load secrets from Google Secret Manager
       - name: 'Load secrets from Secret Manager'

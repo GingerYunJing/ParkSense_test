@@ -63,7 +63,7 @@ jobs:
           workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
           service_account: 'ginger-github-test@sigmaparksense.iam.gserviceaccount.com'
       
-      # Verify the authentication was successful
+      # Verify the authentication was successful if any repositories information returns.
       - name: Verify WIF Access
         run: gcloud artifacts repositories list --location=${{ env.REGION }} --project=${{ env.PROJECT_ID }}
 

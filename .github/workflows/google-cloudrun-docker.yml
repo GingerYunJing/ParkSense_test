@@ -96,16 +96,29 @@ jobs:
           password: '${{ steps.auth.outputs.auth_token }}'
           registry: '${{ env.REGION }}-docker.pkg.dev'
 
-      - name: 'Build and Push Container'
+      # - name: 'Build and Push Container vis Docker'
+      #   run: |-
+      #     DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
+      #     echo "Docker tag: ${DOCKER_TAG}"
+      #     docker build \
+      #       --build-arg MONGO_URI="${{ steps.secrets.outputs.MONGO_URI }}" \
+      #       --build-arg MONGO_DB="${{ steps.secrets.outputs.MONGO_DB }}" \
+      #       --build-arg SECRET_KEY="${{ steps.secrets.outputs.SECRET_KEY }}" \
+      #       --tag "${DOCKER_TAG}" .
+      #     docker push "${DOCKER_TAG}"
+
+      - name: 'Build and Push Container via gcloud'
         run: |-
-          DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
-          echo "Docker tag: ${DOCKER_TAG}"
-          docker build \
-            --build-arg MONGO_URI="${{ steps.secrets.outputs.MONGO_URI }}" \
-            --build-arg MONGO_DB="${{ steps.secrets.outputs.MONGO_DB }}" \
-            --build-arg SECRET_KEY="${{ steps.secrets.outputs.SECRET_KEY }}" \
-            --tag "${DOCKER_TAG}" .
-          docker push "${DOCKER_TAG}"
+          gcloud run deploy ${{ env.SERVICE }} \
+            --source . \
+            --region=${{ env.REGION }} \
+            --project=${{ env.PROJECT_ID }} \
+            --allow-unauthenticated \
+            --set-build-env-vars \
+              MONGO_URI="${{ steps.secrets.outputs.MONGO_URI }}",\
+              MONGO_DB="${{ steps.secrets.outputs.MONGO_DB }}",\
+              SECRET_KEY="${{ steps.secrets.outputs.SECRET_KEY }}"
+
       
         # END - Docker auth and build
         

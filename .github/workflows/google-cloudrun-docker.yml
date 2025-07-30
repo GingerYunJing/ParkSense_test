@@ -32,6 +32,7 @@ name: 'Build and Deploy to Cloud Run'
 on:
   push:
     branches:
+    # - main
       - ginger-branch
   workflow_dispatch:
 
@@ -83,10 +84,10 @@ jobs:
         uses: 'google-github-actions/get-secretmanager-secrets@v1'
         with:
           secrets: |
-            MONGO_URI:projects/sigmaparksense/secrets/MONGO_URI
-            MONGO_DB:projects/sigmaparksense/secrets/MONGO_DB
-            SECRET_KEY:projects/sigmaparksense/secrets/SECRET_KEY
-
+            ENV_FILE:projects/sigmaparksense/secrets/parksense-env
+          # MONGO_URI:projects/sigmaparksense/secrets/MONGO_URI
+          # MONGO_DB:projects/sigmaparksense/secrets/MONGO_DB
+          # SECRET_KEY:projects/sigmaparksense/secrets/SECRET_KEY
             
       - name: 'Build and Push with Cloud Build'
         run: |
@@ -101,7 +102,8 @@ jobs:
             --platform=managed \
             --region=${{ env.REGION }} \
             --allow-unauthenticated \
-            --update-secrets=MONGO_URI=MONGO_URI:latest,MONGO_DB=MONGO_DB:latest,SECRET_KEY=SECRET_KEY:latest
+            --update-secrets=/app/.env=ENV_FILE:latest
+        # --update-secrets=MONGO_URI=MONGO_URI:latest,MONGO_DB=MONGO_DB:latest,SECRET_KEY=SECRET_KEY:latest
 
 
       # If required, use the Cloud Run URL output in later steps

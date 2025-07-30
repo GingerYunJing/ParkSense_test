@@ -107,8 +107,12 @@ jobs:
       #       --build-arg SECRET_KEY="${{ steps.secrets.outputs.SECRET_KEY }}" \
       #       --tag "${DOCKER_TAG}" .
       #     docker push "${DOCKER_TAG}"
+      - name: 'Build and Push with Cloud Build'
+        run: |
+          gcloud builds submit \
+            --tag "${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE }}"
 
-      - name: 'Deploy to Cloud Run via gcloud'
+      - name: 'Deploy to Cloud Run'
         run: |
           gcloud run deploy ${{ env.SERVICE }} \
             --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE }} \

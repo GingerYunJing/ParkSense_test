@@ -39,6 +39,7 @@ env:
   PROJECT_ID: 'sigmaparksense' # TODO: update to your Google Cloud project ID
   REGION: 'us-west2' # TODO: update to your region
   SERVICE: 'parksense-api' # TODO: update to your service name
+  REPO_NAME: 'parksense-api'
   WORKLOAD_IDENTITY_PROVIDER: 'projects/452233946348/locations/global/workloadIdentityPools/github-ginger/providers/github' # TODO: update to your workload identity provider
 jobs:
   deploy:
@@ -110,7 +111,7 @@ jobs:
       - name: 'Deploy to Cloud Run via gcloud'
         run: |
           gcloud run deploy ${{ env.SERVICE }} \
-            --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/parksense-repo/${{ env.SERVICE }} \
+            --image=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE }} \
             --platform=managed \
             --region=${{ env.REGION }} \
             --allow-unauthenticated \

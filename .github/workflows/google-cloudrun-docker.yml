@@ -84,7 +84,7 @@ jobs:
         uses: 'google-github-actions/get-secretmanager-secrets@v1'
         with:
           secrets: |
-            ENV_FILE:projects/sigmaparksense/secrets/parksense-env
+            ENV_FILE:projects/sigmaparksense/secrets/parksense-test-env
           # MONGO_URI:projects/sigmaparksense/secrets/MONGO_URI
           # MONGO_DB:projects/sigmaparksense/secrets/MONGO_DB
           # SECRET_KEY:projects/sigmaparksense/secrets/SECRET_KEY
